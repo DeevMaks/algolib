@@ -1,16 +1,18 @@
 <template>
     <div class="array">
         <div
-            class="array__item relation"
             v-bind:key="index"
-            v-for="(item, index) in arr"
+            v-for="(item, index) in demoArray"
+            class="array__item relation"
+            v-bind:class="{cursor__j: cursor == index, cursor__i: iteration <= index}"
+            :style="`order: ${item.current_pos}`"
         >
             <div class="relation__ration"></div>
             <div class="array__index relation__content">
                 {{ index }}
             </div>
-            <div class="array_content relation__content">
-                {{ item }}
+            <div class="array__content relation__content">
+                {{ item.value }}
             </div>
         </div>
     </div>
@@ -20,46 +22,78 @@
 export default {
     data() {
         return {
-            arr: []
+            demoArray: [],
+            iteration: null,
+            cursor:    null,
         }
     },
+
     props: {
-        'value': Array
+        arr:  Array,
+        iter: Number,
+        cur:  Number,
     },
+
     watch: {
-        value: (val) => {
-            this.arr = val
+        arr: function(val) {
+            this.demoArray = val;
+        },
+
+        iter: function(val) {
+            this.iteration = val;
+        },
+
+        cur: function(val) {
+            this.cursor = val;
         }
     },
-    mounted(){
-        this.arr = this.value
+
+    mounted() {
+        this.demoArray = this.arr;
+        this.iteration = this.iter;
+        this.cursor    = this.cur;
     }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .array{
         font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         display: flex;
         color: #fff;
+        flex-direction: column;
+        align-items: center;
+        transition: flex .3s ease;
 
         &__item{
             width: 40px;
             background: rgb(209, 17, 17);
-            margin: 0 5px;
+            margin: 5px;
             padding: 2px;
             text-align: center;
             line-height: 44px;
             z-index: 1;
             font-weight: 600;
+            overflow: hidden;
         }
 
         &__index{
             position: absolute;
             color: rgba(255, 255, 255, .2);
-            font-size: 4.1rem;
+            font-size: 4.2rem;
             font-weight: 600;
             z-index: 0;
+        }
+    }
+
+    .cursor{
+        &__i{
+            box-shadow: 0 0 20px rgb(175, 93, 93);
+        }
+
+        &__j{
+            border-left: 3px solid #017ca1;
+            border-right: 3px solid #017ca1;
         }
     }
 
